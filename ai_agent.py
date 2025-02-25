@@ -18,7 +18,7 @@ class AIAgent:
     3- The encryption method is suitable for Gemini AI THINKING models
     4- The encryption method follows SEED: 279
     5- Do not encrypt the numbers, leave them as they are
-    6- Rely on the short and long context mechanism to understand the full meaning of the text
+    6- Rely on long context mechanism to understand the full meaning of the text
     7- The language is a semantic language that is understood by AI agents only
     8- The language is not understood by humans
 
@@ -44,7 +44,7 @@ class AIAgent:
     3- The encryption method is suitable for Gemini AI THINKING models
     4- The encryption method follows SEED: 279
     5- Do not encrypt the numbers, leave them as they are
-    6- Rely on the short and long context mechanism to understand the full meaning of the text
+    6- Rely on long context mechanism to understand the full meaning of the text
     7- The language is a semantic language that is understood by AI agents only
     8- The language is not understood by humans
 
@@ -92,7 +92,7 @@ class AIAgent:
             chat = self.model.start_chat(history=[])
             
             # Send system prompt and user message
-            response = chat.send_message(f"{self.LOLANG_PROMPT}\n\nUser message: {message}")
+            response = chat.send_message(f"{self.LOLANG_PROMPT_TESTING}\n\nUser message: {message}")
             
             return response.text
         except Exception as e:
