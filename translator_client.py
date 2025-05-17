@@ -50,10 +50,10 @@ class TranslatorClient:
                 # Determine the color based on the role
                 if "server" in role.lower():
                     encrypted_color = TerminalColors.BLUE
-                    translated_color = TerminalColors.CYAN
+                    translated_color = TerminalColors.YELLOW
                 else:
                     encrypted_color = TerminalColors.GREEN
-                    translated_color = TerminalColors.YELLOW
+                    translated_color = TerminalColors.HEADER
 
                 # Format the role name for display
                 display_role = role.replace("-agent", "").title()
@@ -70,7 +70,7 @@ class TranslatorClient:
                 self.message_count += 1
 
         except Exception as e:
-            logger.error(f"Error in receive_messages: {e}")
+            print(TerminalColors.colorize(f"Error in receive_messages: {e}", TerminalColors.RED))
         finally:
             if self.websocket and self.websocket.open:
                 await self.websocket.close()
@@ -108,7 +108,7 @@ async def main():
     except KeyboardInterrupt:
         print(TerminalColors.colorize("\nStopping translator client...", TerminalColors.YELLOW))
     except Exception as e:
-        print(TerminalColors.colorize(f"Error: {e}", TerminalColors.RED))
+        print(TerminalColors.colorize(f"Error in main: {e}", TerminalColors.RED))
     finally:
         if translator.websocket and translator.websocket.open:
             await translator.websocket.close()

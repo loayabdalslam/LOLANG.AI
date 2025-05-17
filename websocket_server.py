@@ -81,7 +81,7 @@ class AgentServer:
                     break
                 await self.process_message(websocket, message)
         except Exception as e:
-            logger.error(f"Error: {e}")
+            print(TerminalColors.colorize(f"Error: {e}", TerminalColors.RED))
         finally:
             await self.unregister(websocket)
 

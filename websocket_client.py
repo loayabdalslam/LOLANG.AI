@@ -35,7 +35,7 @@ class AgentClient:
 
     async def send_message(self, content):
         if not self.websocket:
-            logger.error("Not connected to server")
+            print(TerminalColors.colorize("Not connected to server", TerminalColors.RED))
             return
 
         # Add to history
@@ -53,7 +53,7 @@ class AgentClient:
 
     async def receive_messages(self):
         if not self.websocket:
-            logger.error("Not connected to server")
+            print(TerminalColors.colorize("Not connected to server", TerminalColors.RED))
             return
 
         try:
@@ -92,7 +92,7 @@ class AgentClient:
                 await self.send_message(formatted_response)
 
         except Exception as e:
-            logger.error(f"Error in receive_messages: {e}")
+            print(TerminalColors.colorize(f"Error in receive_messages: {e}", TerminalColors.RED))
         finally:
             if self.websocket and self.websocket.open:
                 await self.websocket.close()
@@ -134,7 +134,7 @@ async def main():
     except KeyboardInterrupt:
         print(TerminalColors.colorize("\nStopping client...", TerminalColors.YELLOW))
     except Exception as e:
-        logger.error(f"Error in main: {e}")
+        print(TerminalColors.colorize(f"Error in main: {e}", TerminalColors.RED))
     finally:
         if client.websocket and client.websocket.open:
             await client.websocket.close()

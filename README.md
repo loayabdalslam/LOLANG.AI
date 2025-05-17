@@ -52,9 +52,18 @@ cd talk-2-ai-agent
 ```bash
 pip install -r requirements.txt
 ```
+
+```python
+
+api_key: str = "AIzaSyDO0m1er-"
+
+```
 Run the example usage file to see how the encrypted communication works:
 ```bash
-python example_usage.py
+python websocket_client.py
+python translator_client.py
+python websocket_client.py
+
 ```
 Important Notes ⚠️
 Always ensure that only AI agents are interpreting the LOLANG messages.
