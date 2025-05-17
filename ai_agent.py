@@ -3,6 +3,9 @@ import google.generativeai as genai
 from terminal_colors import TerminalColors
 from config import GeminiConfig
 import logging
+import time
+import random
+import asyncio
 
 class AIAgent:
     LOLANG_PROMPT_TESTING  = """
@@ -86,18 +89,43 @@ class AIAgent:
                 raise
         return self._model
 
-    def chat(self, message: str) -> str:
-        try:
-            # Create chat context
-            chat = self.model.start_chat(history=[])
-            
-            # Send system prompt and user message
-            response = chat.send_message(f"{self.LOLANG_PROMPT_TESTING}\n\nUser message: {message}")
-            
-            return response.text
-        except Exception as e:
-            self.logger.error(f"Chat completion failed: {e}")
-            return f"Error: {str(e)}"
+    def chat(self, message_history):
+        max_retries = 10
+        base_delay = 5
+        
+        for attempt in range(max_retries):
+            try:
+                # Create chat context
+                chat = self.model.start_chat(history=[])
+                
+                # Format message history for the prompt
+                formatted_history = "\n".join([
+                    f"{msg['role']}: {msg['content']}" 
+                    for msg in message_history
+                ])
+                
+                # Use LOLANG_PROMPT_PRODUCTION for real conversations
+                prompt = self.LOLANG_PROMPT_PRODUCTION
+                
+                # Send system prompt and message history
+                response = chat.send_message(
+                    f"{prompt}\n\nChat history:\n{formatted_history}"
+                )
+                
+                # Add delay to respect rate limits
+                time.sleep(self.config.message_delay)
+                
+                return response.text
+            except Exception as e:
+                if "429" in str(e) and attempt < max_retries - 1:
+                    # Calculate exponential backoff with jitter
+                    delay = (base_delay * (2 ** attempt)) + random.uniform(0, 1)
+                    # Silently retry without logging
+                    time.sleep(delay)
+                else:
+                    # Only log if it's not a 429 error or we've reached max retries
+                    self.logger.error(f"Chat completion failed: {e}")
+                    return f"Error: {str(e)}"
 
     def speak(self, message: str) -> str:
         return TerminalColors.colorize(f"{self.name}: {message}", self.color)
